@@ -23,8 +23,7 @@ int main (int argc,char *argv[]) {
         printf("Cannot open %s\n",argv[1]);
         return(1);
     }
-    int tokenId = 0;
-    int lineId = 0;
+    
 
     //reserved tokens
     char tokens[7] = {'[' , ']' , ',' , '(' , ')' , '=', ':'};
@@ -39,7 +38,8 @@ int main (int argc,char *argv[]) {
     
 
 
-
+    int tokenId = 0;
+    int lineId = 0;
 
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
@@ -64,27 +64,21 @@ int main (int argc,char *argv[]) {
         }
         
         printf("%s \n",newSentence);
-        // empty the array
-        memset(newSentence,0,512);
-    
+        
+        
+        
         // splits the tokens that includes space between them
-        char *token = strtok(line, " ");
+        char *token = strtok(newSentence, " ");
         while( token != NULL ) {
             //stores each token in two dimensional array
-            /*
-                burası tam çalışmıyor. stringleri tutmak için char pointer array kullandım ama
-                muhtemelen tokenın değeri değişince pointer array de tokenı tuttuğu için arraydeki
-                tüm elemanlar son okunan elemana eşitleniyor.
-
-                mesela son satır matrix B[1] ise splittedLine[0][0] da splittedLine[10][0] da matrix;
-                splittedLine[0][1] de splittedLine[10][1] de B[1] değerini tutuyor.
-            */
             splittedLines[lineId][tokenId] = token; 
             tokenId += 1;
             token = strtok(NULL, " ");
         }
         lineId += 1;
         tokenId = 0;
+        // empty the array
+        memset(newSentence,0,512);
         
     }
     

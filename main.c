@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include "functions.c"
+#include <stdbool.h>
 
 int main (int argc,char *argv[]) {
 
@@ -23,10 +25,38 @@ int main (int argc,char *argv[]) {
     }
     int tokenId = 0;
     int lineId = 0;
+
+    //reserved tokens
+    char tokens[7] = {'[' , ']' , ',' , '(' , ')' , '=', ':'};
+    int reserved[7];
+    
+    for(int i = 0; i < sizeof(tokens)/sizeof(char); i++){
+        int temp = (int) tokens[i];
+        reserved[i] = temp;
+        printf("%d\n", temp);
+    }
+
+
+    
+
+
+
+
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
-        // splits the tokens that includes space between them
+        
+        int num = 0;
+        for(int i = 0; i < strlen(&line[0])-2; i++){
+            
+            //checks tokens 
+            if(isReserved(line[i],reserved)) {
+                printf("%c \n", line[i]);
+            }
+            num++;
+        }
 
+
+        // splits the tokens that includes space between them
         char *token = strtok(line, " ");
         while( token != NULL ) {
             //stores each token in two dimensional array
@@ -39,7 +69,7 @@ int main (int argc,char *argv[]) {
                 splittedLine[0][1] de splittedLine[10][1] de B[1] değerini tutuyor.
             */
             splittedLines[lineId][tokenId] = token; 
-            tokenId += 1;;  
+            tokenId += 1;
             token = strtok(NULL, " ");
         }
         lineId += 1;

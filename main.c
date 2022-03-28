@@ -33,9 +33,8 @@ int main (int argc,char *argv[]) {
     for(int i = 0; i < sizeof(tokens)/sizeof(char); i++){
         int temp = (int) tokens[i];
         reserved[i] = temp;
-        printf("%d\n", temp);
     }
-
+    char space = ' ';
 
     
 
@@ -45,17 +44,29 @@ int main (int argc,char *argv[]) {
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
         
-        int num = 0;
-        for(int i = 0; i < strlen(&line[0])-2; i++){
-            
-            //checks tokens 
-            if(isReserved(line[i],reserved)) {
-                printf("%c \n", line[i]);
+        int j = 0;
+        char newSentence[512];
+        int lineLength = strlen(&line[0]);
+        
+        for(int i = 0; i < strlen(&line[0]); i++){
+            //checks tokens if its reserved or alphanumeric
+            if(isReserved(line[i], reserved)) {
+                newSentence[j] = space;
+                j++;
+                newSentence[j] = line[i];
+                j++;
+                newSentence[j] = space;
+                j++;
+            }else if (isalnum(line[i]) || (int) line[i] == (int)space){
+                newSentence[j] = line[i];
+                j++;
             }
-            num++;
         }
-
-
+        
+        printf("%s \n",newSentence);
+        // empty the array
+        memset(newSentence,0,512);
+    
         // splits the tokens that includes space between them
         char *token = strtok(line, " ");
         while( token != NULL ) {
@@ -74,10 +85,11 @@ int main (int argc,char *argv[]) {
         }
         lineId += 1;
         tokenId = 0;
+        
     }
+    
     fclose(fp);
     
-    printf("%s", splittedLines[5][1]);
 
 return(0);
 

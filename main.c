@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "functions.c"
 #include <stdbool.h>
 
@@ -8,8 +9,11 @@ int main (int argc,char *argv[]) {
     FILE *fp;
     char line[256];
     // array to store splitted line
-    char *splittedLines[256][256];
-
+    char *splittedLines[256];
+    for (int i = 0; i < 256; i++) splittedLines[i] = calloc(256, sizeof(char*));
+    char *varNames[256];
+    for (int i = 0; i < 256; i++) varNames[i] = calloc(256, sizeof(char));
+    int varNumber = 0;
     /* Open file for reading Filename is given on the command line */
 
     if (argc != 2) {
@@ -38,12 +42,12 @@ int main (int argc,char *argv[]) {
     
 
 
-    int tokenId = 0;
+    
     int lineId = 0;
 
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
-        
+        int tokenId = 0;
         int j = 0;
         char newSentence[512];
         int lineLength = strlen(&line[0]);
@@ -63,24 +67,39 @@ int main (int argc,char *argv[]) {
             }
         }
         
-        printf("%s \n",newSentence);
+        //printf("%s \n",newSentence);
         
         
         
         // splits the tokens that includes space between them
         char *token = strtok(newSentence, " ");
         while( token != NULL ) {
-            //stores each token in two dimensional array
-            splittedLines[lineId][tokenId] = token; 
+            //stores each token in array
+            memcpy(splittedLines[tokenId], token, 256); 
             tokenId += 1;
             token = strtok(NULL, " ");
         }
         lineId += 1;
-        tokenId = 0;
+        //checks 0 index and choose what to do
+        if(strcmp(splittedLines[0],"matrix")==0){
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }else if(strcmp(splittedLines[0],"vector")==0){
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }else if(strcmp(splittedLines[0],"scalar")==0){
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }
+        printf("%s \n",varNames[0]);
+        
+
         // empty the array
+        //printf("%s \n",splittedLines[0]);
         memset(newSentence,0,512);
         
     }
+    
     
     fclose(fp);
     

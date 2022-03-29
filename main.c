@@ -11,10 +11,10 @@
 // row number and column number are stored in two distinct variables.
 
 struct matrix{
-    char name[24];
+    char *name[24];
     int data_type;
-    int row_number[1];
-    int column_number[1];
+    int row_number;
+    int column_number;
     float matrix[];
 };
 
@@ -22,7 +22,7 @@ struct matrix{
 // data type is 0 for scalars when initializing
 
 struct scalar {
-    char name[24];
+    char *name[24];
     int data_type;
     float actual_value;
     int int_value;
@@ -70,19 +70,7 @@ int main (int argc,char *argv[]) {
     }
     char space = ' ';
 
-    
-
-
-    
     int lineId = 0;
-
-    //struct matrix *matrixArray = malloc(sizeof(struct matrix)*256);
-    //struct scalar *scalarArray = malloc(sizeof(struct scalar)*256);
-    struct matrix matrixArray[256];
-    struct scalar scalarArray[256];
-
-    //int scalarVarCount = 0;
-    //int matrixVarCount = 0;
 
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
@@ -106,8 +94,6 @@ int main (int argc,char *argv[]) {
             }
         }
         
-        //printf("%s \n",newSentence);
-        //int dimensions[256][2]
         
         // splits the tokens that includes space between them
         char *token = strtok(newSentence, " ");
@@ -149,9 +135,42 @@ int main (int argc,char *argv[]) {
         memset(newSentence,0,512);
         
     }
-    printf("%d",atoi(col_dimensions[2]));
     fclose(fp);
     
+        struct matrix matrixArray[256];
+    struct scalar scalarArray[256];
+    int scalarVarCount = 0;
+    int matrixVarCount = 0;
+
+    for (int i=0;i<256;i++){
+        if(strcmp(varTypes[i],"scalar")==0){
+            struct scalar s;
+            s.name[0] = varNames[i];
+            s.data_type = 0;
+            scalarArray[scalarVarCount] = s;
+            scalarVarCount += 1;
+        }
+        else if(strcmp(varTypes[i],"vector")==0){
+            struct matrix v;
+            v.name[0] = varNames[i];
+            v.data_type = 1;
+            v.row_number = atoi(row_dimensions[i]);
+            v.column_number = atoi(col_dimensions[i]);
+            matrixArray[matrixVarCount] = v;
+            matrixVarCount += 1;
+        }
+        else if (strcmp(varTypes[i],"matrix")==0){
+            struct matrix m;
+            m.name[0] = varNames[i];
+            m.data_type = 1;
+            m.row_number = atoi(row_dimensions[i]);
+            m.column_number = atoi(col_dimensions[i]);
+            matrixArray[matrixVarCount] = m;
+            matrixVarCount += 1;
+        }
+    }
+
+    printf("%d\n",matrixArray[2].row_number);
 
 return(0);
 

@@ -91,7 +91,7 @@ int main (int argc,char *argv[]) {
             memcpy(varNames[varNumber], splittedLines[1], 100);
             varNumber++;
         }
-        printf("%s \n",varNames[0]);
+        
         
 
         // empty the array
@@ -100,7 +100,7 @@ int main (int argc,char *argv[]) {
         
     }
     
-    
+    printf("%s \n",varNames[0]);
     fclose(fp);
     
 

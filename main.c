@@ -13,6 +13,8 @@ int main (int argc,char *argv[]) {
     for (int i = 0; i < 256; i++) splittedLines[i] = calloc(256, sizeof(char*));
     char *varNames[256];
     for (int i = 0; i < 256; i++) varNames[i] = calloc(256, sizeof(char));
+    char *varTypes[256];
+    for (int i = 0; i < 256; i++) varTypes[i] = calloc(256, sizeof(char));
     int varNumber = 0;
     /* Open file for reading Filename is given on the command line */
 
@@ -82,12 +84,15 @@ int main (int argc,char *argv[]) {
         lineId += 1;
         //checks 0 index and choose what to do
         if(strcmp(splittedLines[0],"matrix")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
             memcpy(varNames[varNumber], splittedLines[1], 100);
             varNumber++;
         }else if(strcmp(splittedLines[0],"vector")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
             memcpy(varNames[varNumber], splittedLines[1], 100);
             varNumber++;
         }else if(strcmp(splittedLines[0],"scalar")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
             memcpy(varNames[varNumber], splittedLines[1], 100);
             varNumber++;
         }

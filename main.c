@@ -4,6 +4,31 @@
 #include "functions.c"
 #include <stdbool.h>
 
+
+// struct for matrices
+// data type is 1 for vectors and matrices
+// all values are stored as floats in 2D array.
+// row number and column number are stored in two distinct variables.
+
+struct matrix{
+    char name[24];
+    int data_type;
+    int row_number;
+    int column_number;
+    float matrix[];
+};
+
+// struct for scalars
+// data type is 0 for scalars when initializing
+
+struct scalar {
+    char name[24];
+    int data_type;
+    float actual_value;
+    int int_value;
+};
+
+
 int main (int argc,char *argv[]) {
 
     FILE *fp;
@@ -104,8 +129,42 @@ int main (int argc,char *argv[]) {
         memset(newSentence,0,512);
         
     }
+
     
-    printf("%s \n",varNames[0]);
+    struct matrix matrixArray[256];
+    struct scalar scalarArray[256];
+    int scalarVarCount = 0;
+    int matrixVarCount = 0;
+
+    for (int i=0;i<256;i++){
+        if(strcmp(varTypes[i],"scalar")==0){
+            struct scalar s;
+            *s.name = *varNames[i];
+            s.data_type = 0;
+            scalarArray[scalarVarCount] = s;
+            scalarVarCount += 1;
+            //printf("%s\n", s.name);
+        }
+        else if(strcmp(varTypes[i],"vector")==0){
+            struct matrix v;
+            *v.name = *varNames[i];
+            v.data_type = 1;
+            v.column_number = 1;
+            // dimensions should be assigned here
+            matrixArray[matrixVarCount] = v;
+            matrixVarCount += 1;
+        }
+        else if (strcmp(varTypes[i],"matrix")==0){
+            struct matrix m;
+            *m.name = *varNames[i];
+            m.data_type = 1;
+            // dimensions should be assigned here
+            matrixArray[matrixVarCount] = m;
+            matrixVarCount += 1;
+        }
+    }
+     
+    //printf("%s \n",varNames[0]);
     fclose(fp);
     
 

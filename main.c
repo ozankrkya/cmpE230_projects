@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "functions.c"
 #include <stdbool.h>
 
@@ -8,8 +9,13 @@ int main (int argc,char *argv[]) {
     FILE *fp;
     char line[256];
     // array to store splitted line
-    char *splittedLines[256][256];
-
+    char *splittedLines[256];
+    for (int i = 0; i < 256; i++) splittedLines[i] = calloc(256, sizeof(char*));
+    char *varNames[256];
+    for (int i = 0; i < 256; i++) varNames[i] = calloc(256, sizeof(char));
+    char *varTypes[256];
+    for (int i = 0; i < 256; i++) varTypes[i] = calloc(256, sizeof(char));
+    int varNumber = 0;
     /* Open file for reading Filename is given on the command line */
 
     if (argc != 2) {
@@ -23,8 +29,7 @@ int main (int argc,char *argv[]) {
         printf("Cannot open %s\n",argv[1]);
         return(1);
     }
-    int tokenId = 0;
-    int lineId = 0;
+    
 
     //reserved tokens
     char tokens[7] = {'[' , ']' , ',' , '(' , ')' , '=', ':'};
@@ -39,11 +44,12 @@ int main (int argc,char *argv[]) {
     
 
 
-
+    
+    int lineId = 0;
 
     //reads input from file
     while( fgets(line,256,fp) != NULL ) {
-        
+        int tokenId = 0;
         int j = 0;
         char newSentence[512];
         int lineLength = strlen(&line[0]);
@@ -63,31 +69,43 @@ int main (int argc,char *argv[]) {
             }
         }
         
-        printf("%s \n",newSentence);
-        // empty the array
-        memset(newSentence,0,512);
-    
+        //printf("%s \n",newSentence);
+        
+        
+        
         // splits the tokens that includes space between them
-        char *token = strtok(line, " ");
+        char *token = strtok(newSentence, " ");
         while( token != NULL ) {
-            //stores each token in two dimensional array
-            /*
-                burası tam çalışmıyor. stringleri tutmak için char pointer array kullandım ama
-                muhtemelen tokenın değeri değişince pointer array de tokenı tuttuğu için arraydeki
-                tüm elemanlar son okunan elemana eşitleniyor.
-
-                mesela son satır matrix B[1] ise splittedLine[0][0] da splittedLine[10][0] da matrix;
-                splittedLine[0][1] de splittedLine[10][1] de B[1] değerini tutuyor.
-            */
-            splittedLines[lineId][tokenId] = token; 
+            //stores each token in array
+            memcpy(splittedLines[tokenId], token, 256); 
             tokenId += 1;
             token = strtok(NULL, " ");
         }
         lineId += 1;
-        tokenId = 0;
+        //checks 0 index and choose what to do
+        if(strcmp(splittedLines[0],"matrix")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }else if(strcmp(splittedLines[0],"vector")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }else if(strcmp(splittedLines[0],"scalar")==0){
+            memcpy(varTypes[varNumber], splittedLines[0], 100);
+            memcpy(varNames[varNumber], splittedLines[1], 100);
+            varNumber++;
+        }
+        
+        
+
+        // empty the array
+        //printf("%s \n",splittedLines[0]);
+        memset(newSentence,0,512);
         
     }
     
+    printf("%s \n",varNames[0]);
     fclose(fp);
     
 

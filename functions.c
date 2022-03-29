@@ -2,9 +2,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+;
 // checks whether the token is reserved by matlang
 bool isReserved(int c, int arr[]){
-    for(int i = 0; i < sizeof(arr)/sizeof(arr[0]); i++){
+    for(int i = 0; i < sizeof(arr)/sizeof(char); i++){
         if((int) c == arr[i]){
             return true;
         }

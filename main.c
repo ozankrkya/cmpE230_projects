@@ -40,8 +40,8 @@ int main (int argc,char *argv[]) {
     
 
     //reserved tokens
-    char tokens[7] = {'[' , ']' , ',' , '(' , ')' , '=', ':'};
-    int reserved[7];
+    char tokens[11] = {'[' , ']' , ',' , '(' , ')' , '=', ':', '{', '}', '*', '+'};
+    int reserved[11];
     
     for(int i = 0; i < sizeof(tokens)/sizeof(char); i++){
         int temp = (int) tokens[i];
@@ -57,7 +57,6 @@ int main (int argc,char *argv[]) {
         int j = 0;
         char newSentence[512];
         int lineLength = strlen(&line[0]);
-        
         for(int i = 0; i < strlen(&line[0]); i++){
             //checks tokens if its reserved or alphanumeric
             if(isReserved(line[i], reserved)) {
@@ -72,7 +71,7 @@ int main (int argc,char *argv[]) {
                 j++;
             }
         }
-        
+        //printf("%s ", newSentence);
         
         // splits the tokens that includes space between them
         char *token = strtok(newSentence, " ");
@@ -148,8 +147,11 @@ int main (int argc,char *argv[]) {
             matrixVarCount += 1;
         }
     }
-
-    printf("%d\n",matrixArray[2].row_number);
+    //bool check =isVariable(matrixArray[2].name[0], varNames);
+    //printf("%s\n",matrixArray[2].name[0]);
+    //printf("%d", check);
+    
+    
 
 return(0);
 

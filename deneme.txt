@@ -5,7 +5,7 @@ scalar i
 scalar n
 vector x[2]
 vector y[2]
-matrix A[12,2]
+matrix A[12,3]
 matrix B[2,2]
 # statements
 n = 10

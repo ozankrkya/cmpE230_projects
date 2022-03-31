@@ -32,10 +32,12 @@ int find(char* name , char* varNames[]){
     return -1;
 }
 
+//prints error line
 void error(int lineId){
     printf("error in line %d", lineId);
 }
 
+// checks whether the input is number
 bool isNumber(char* name){
     bool check = true;
     char* q;

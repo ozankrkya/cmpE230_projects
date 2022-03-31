@@ -87,7 +87,8 @@ int main (int argc,char *argv[]) {
         lineId += 1;
         //checks 0 index and choose what to do
         if(strcmp(splittedLines[0],"matrix")==0 ){
-            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[6],"]")==0&& isNumber(splittedLines[3])&& isNumber(splittedLines[5])){
+            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[6],"]")==0&& isNumber(splittedLines[3])&& isNumber(splittedLines[5])&&\
+             strcmp(splittedLines[4],",")==0){
                 memcpy(varTypes[varNumber], splittedLines[0], 100);
                 memcpy(varNames[varNumber], splittedLines[1], 100);
                 memcpy(row_dimensions[varNumber], splittedLines[3], 100);

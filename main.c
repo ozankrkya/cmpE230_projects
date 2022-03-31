@@ -83,21 +83,30 @@ int main (int argc,char *argv[]) {
         }
         lineId += 1;
         //checks 0 index and choose what to do
-        if(strcmp(splittedLines[0],"matrix")==0){
-            memcpy(varTypes[varNumber], splittedLines[0], 100);
-            memcpy(varNames[varNumber], splittedLines[1], 100);
-            memcpy(row_dimensions[varNumber], splittedLines[3], 100);
-            memcpy(col_dimensions[varNumber], splittedLines[5], 100);
-            varNumber++;
-
+        if(strcmp(splittedLines[0],"matrix")==0 ){
+            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[6],"]")==0&& isNumber(splittedLines[3])&& isNumber(splittedLines[5])){
+                memcpy(varTypes[varNumber], splittedLines[0], 100);
+                memcpy(varNames[varNumber], splittedLines[1], 100);
+                memcpy(row_dimensions[varNumber], splittedLines[3], 100);
+                memcpy(col_dimensions[varNumber], splittedLines[5], 100);
+                varNumber++;
+            }else{
+                error(lineId);
+                break;
+            }
 
         }else if(strcmp(splittedLines[0],"vector")==0){
-            memcpy(varTypes[varNumber], splittedLines[0], 100);
-            memcpy(varNames[varNumber], splittedLines[1], 100);
-            memcpy(row_dimensions[varNumber], splittedLines[3], 100);
-            char col = '1';
-            memcpy(col_dimensions[varNumber], &col, 100);
-            varNumber++;
+            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[4],"]")==0 && isNumber(splittedLines[3])){
+                memcpy(varTypes[varNumber], splittedLines[0], 100);
+                memcpy(varNames[varNumber], splittedLines[1], 100);
+                memcpy(row_dimensions[varNumber], splittedLines[3], 100);
+                char col = '1';
+                memcpy(col_dimensions[varNumber], &col, 100);
+                varNumber++;
+            }else{
+                error(lineId);
+                break;
+            }
 
         }else if(strcmp(splittedLines[0],"scalar")==0){
             memcpy(varTypes[varNumber], splittedLines[0], 100);
@@ -107,11 +116,11 @@ int main (int argc,char *argv[]) {
             varNumber++;
         }
         
-         
+        
         // empty the array
         //printf("%s \n",splittedLines[0]);
         memset(newSentence,0,512);
-        
+
     }
     fclose(fp);
     

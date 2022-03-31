@@ -32,6 +32,19 @@ int find(char* name , char* varNames[]){
     return -1;
 }
 
+void error(int lineId){
+    printf("error in line %d", lineId);
+}
+
+bool isNumber(char* name){
+    bool check = true;
+    char* q;
+    for(q = name; *q != '\0'; q++){
+        check = check && isdigit(*q) ;
+    }
+    return check;
+}
+
 
 
 

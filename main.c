@@ -59,6 +59,9 @@ int main (int argc,char *argv[]) {
         int lineLength = strlen(&line[0]);
         for(int i = 0; i < strlen(&line[0]); i++){
             //checks tokens if its reserved or alphanumeric
+            if(line[i] == '#'){
+                break;
+            }
             if(isReserved(line[i], reserved)) {
                 newSentence[j] = space;
                 j++;
@@ -71,7 +74,7 @@ int main (int argc,char *argv[]) {
                 j++;
             }
         }
-        //printf("%s ", newSentence);
+        printf("%s\n", newSentence);
         
         // splits the tokens that includes space between them
         char *token = strtok(newSentence, " ");

@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "functions.c"
-#include "structs.c"
 #include <stdbool.h>
+#include <ctype.h>
+#include "expressions2.c"
+
+#define constant 256
 
 
 
@@ -15,14 +17,14 @@ int main (int argc,char *argv[]) {
     // array to store splitted line
     char *splittedLines[256];
     for (int i = 0; i < 256; i++) splittedLines[i] = calloc(256, sizeof(char*));
-    char *varNames[256];
-    for (int i = 0; i < 256; i++) varNames[i] = calloc(256, sizeof(char));
-    char *varTypes[256];
-    for (int i = 0; i < 256; i++) varTypes[i] = calloc(256, sizeof(char));
-    char *row_dimensions[256];
-    for (int i = 0; i < 256; i++) row_dimensions[i] = calloc(256, sizeof(char*));
-    char *col_dimensions[256];
-     for (int i = 0; i < 256; i++) col_dimensions[i] = calloc(256, sizeof(char*));
+    char *varNames[512];
+    for (int i = 0; i < 512; i++) varNames[i] = calloc(512, sizeof(char));
+    char *varTypes[512];
+    for (int i = 0; i < 512; i++) varTypes[i] = calloc(512, sizeof(char));
+    char *row_dimensions[512];
+    for (int i = 0; i < 512; i++) row_dimensions[i] = calloc(512, sizeof(char*));
+    char *col_dimensions[512];
+     for (int i = 0; i < 512; i++) col_dimensions[i] = calloc(512, sizeof(char*));
     int varNumber = 0;
     /* Open file for reading Filename is given on the command line */
 
@@ -40,10 +42,11 @@ int main (int argc,char *argv[]) {
     
 
     //reserved tokens
-    char tokens[11] = {'[' , ']' , ',' , '(' , ')' , '=', ':', '{', '}', '*', '+'};
-    int reserved[11];
+    char tokens[12] = {'[' , ']' , ',' , '(' , ')' , '=', ':', '{', '}', '*', '+', '-'};
+    int reserved[12];
+    char *function_names[20] = {"sqrt","tr","choose" };
     
-    for(int i = 0; i < sizeof(tokens)/sizeof(char); i++){
+    for(int i = 0; i < 12; i++){
         int temp = (int) tokens[i];
         reserved[i] = temp;
     }
@@ -74,7 +77,7 @@ int main (int argc,char *argv[]) {
                 j++;
             }
         }
-        printf("%s\n", newSentence);
+        //printf("%s\n", newSentence);
         
         // splits the tokens that includes space between them
         char *token = strtok(newSentence, " ");
@@ -84,10 +87,11 @@ int main (int argc,char *argv[]) {
             tokenId += 1;
             token = strtok(NULL, " ");
         }
+        memcpy(splittedLines[tokenId],"exit",256);
         lineId += 1;
         //checks 0 index and choose what to do
         if(strcmp(splittedLines[0],"matrix")==0 ){
-            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[6],"]")==0&& isNumber(splittedLines[3])&& isNumber(splittedLines[5])&&\
+            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[6],"]")==0&& isInteger(splittedLines[3])&& isInteger(splittedLines[5])&&\
              strcmp(splittedLines[4],",")==0){
                 memcpy(varTypes[varNumber], splittedLines[0], 100);
                 memcpy(varNames[varNumber], splittedLines[1], 100);
@@ -100,8 +104,8 @@ int main (int argc,char *argv[]) {
             }
 
         }else if(strcmp(splittedLines[0],"vector")==0){
-            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[4],"]")==0 && isNumber(splittedLines[3])){
-                memcpy(varTypes[varNumber], splittedLines[0], 100);
+            if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[4],"]")==0 && isInteger(splittedLines[3])){
+                memcpy(varTypes[varNumber], "matrix", 100);
                 memcpy(varNames[varNumber], splittedLines[1], 100);
                 memcpy(row_dimensions[varNumber], splittedLines[3], 100);
                 char col = '1';
@@ -118,6 +122,78 @@ int main (int argc,char *argv[]) {
             row_dimensions[varNumber] = NULL;
             col_dimensions[varNumber] = NULL;          
             varNumber++;
+        }else if(strcmp(splittedLines[1],"=") == 0){
+            char *as_var_name = calloc(24, sizeof(char));
+            memcpy(as_var_name, splittedLines[0],1);
+            //looks if variable is declared
+            
+            if(isVariable(as_var_name,varNames)){
+                int as_var_index = find(as_var_name, varNames);
+                //assignment for matrices
+                
+                if(strcmp(varTypes[as_var_index],"matrix") == 0 || strcmp(varTypes[as_var_index],"vector") == 0){
+                    int row_num_as_matrix = atoi(row_dimensions[as_var_index]);
+                    int col_num_as_matrix = atoi(col_dimensions[as_var_index]);
+
+                    // looks for matrix assignment which is done with curly braces
+                    
+                    if(strcmp(splittedLines[2],"{") == 0 && strcmp(splittedLines[3+(row_num_as_matrix*col_num_as_matrix)], "}") == 0){
+                        int entry_number = row_num_as_matrix*col_num_as_matrix;
+                        double entries[entry_number];
+                        for(int i=0;i<row_num_as_matrix;i++){
+                            for(int j=0;j<col_num_as_matrix;j++){
+                                int entry_char_size = strlen(splittedLines[3+(i*col_num_as_matrix+j)]);
+                                char *entry_value_in_char = calloc(entry_char_size,sizeof(double));
+                                memcpy(entry_value_in_char,splittedLines[3+(i*col_num_as_matrix+j)],entry_char_size);
+                                double entry_value = atof(entry_value_in_char);
+                                entries[i*col_num_as_matrix+j] = entry_value;
+                            }
+                        }
+                        for (int i=0;i<entry_number;i++){
+                        
+                        }
+                        // at the end of above block, we have the double array (entries) to give as an input to matrix_assign function.
+                        // now print "varName[as_var_index] = matrix_assigner(entries, row_num_as_matrix, col_num_as_matrix);\n" to the output file
+                    }
+                    else{
+                        //error(lineId);
+                        //where are my curly braces or there are not right number of entries for variable matrix
+                        //break;
+                    }
+                    
+                }             
+            }
+            else{
+                error(lineId);
+                //there is no such variable declared to assign
+                break;
+            }    
+            
+        }
+        if(lineId == 22){
+            char result[256];
+            char *result2[256];
+            for (int i = 0; i < 256; i++) result2[i] = calloc(256, sizeof(char*));
+            int tmpId = 0;
+            //printf("bu %s \n", splittedLines[3]);
+            expr( result , splittedLines, varNames);
+            printf("%s \n", result);
+            
+            char *tmp = strtok(result, " ");
+            while( tmp != NULL ) {
+                //stores each token in array
+                memcpy(result2[tmpId], tmp, 256); 
+                tmpId += 1;
+                tmp = strtok(NULL, " ");
+            }
+            memcpy(result2[tmpId], "exit", 256); 
+            char result3[256];
+            result3[0] = '\0';
+            //printf("%d", tmpId);
+            //printf("%s", result2[5]);
+            postFixToInfix(result2, result3, varNames,varTypes, lineId, varNumber, col_dimensions, row_dimensions);
+            printf("%s", result3);
+            
         }
         
         
@@ -128,44 +204,9 @@ int main (int argc,char *argv[]) {
     }
     fclose(fp);
     
-    struct matrix *matrixArray = malloc( 256 * sizeof(struct matrix));
-    struct scalar *scalarArray = malloc( 256 * sizeof(struct scalar));
-    int scalarVarCount = 0;
-    int matrixVarCount = 0;
-
-    for (int i=0;i<256;i++){
-        if(strcmp(varTypes[i],"scalar")==0){
-            struct scalar s;
-            s.name[0] = varNames[i];
-            s.data_type = 0;
-            scalarArray[scalarVarCount] = s;
-            scalarVarCount += 1;
-        }
-        else if(strcmp(varTypes[i],"vector")==0){
-            struct matrix v;
-            v.name[0] = varNames[i];
-            v.data_type = 1;
-            v.row_number = atoi(row_dimensions[i]);
-            v.column_number = atoi(col_dimensions[i]);
-            matrixArray[matrixVarCount] = v;
-            matrixVarCount += 1;
-        }
-        else if (strcmp(varTypes[i],"matrix")==0){
-            struct matrix m;
-            m.name[0] = varNames[i];
-            m.data_type = 1;
-            m.row_number = atoi(row_dimensions[i]);
-            m.column_number = atoi(col_dimensions[i]);
-            matrixArray[matrixVarCount] = m;
-            matrixVarCount += 1;
-        }
-    }
-    //bool check =isVariable(matrixArray[2].name[0], varNames);
-    //printf("%s\n",matrixArray[2].name[0]);
-    //printf("%d", check);
+    char * arr[256] = {"20", "+", "5", "-", "3",  };
     
     
-
 return(0);
 
 }

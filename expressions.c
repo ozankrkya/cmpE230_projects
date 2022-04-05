@@ -288,7 +288,17 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                      }else if(strcmp(temp2type, "matrix") == 0){
                         // matrix scalar yazılacak
                      }else{
-                        // scalar çarpım yazılacak
+                        // scalar çarpım
+                        strcat(temp, "( ");
+                        strcat(temp, temp2);
+                        strcat(temp, " * ");
+                        strcat(temp, temp1);
+                        strcat(temp, " ) ");
+                        varNames[varNum] = temp;
+                        varTypes[varNum] = "scalar";
+                        coldm[varNum] = NULL;
+                        rowdm[varNum] = NULL;
+                        varNum ++;
 
                      }
               

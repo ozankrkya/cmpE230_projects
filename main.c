@@ -195,6 +195,8 @@ int main (int argc,char *argv[]) {
             printf("%s", result3);
             
         }
+
+        
         
         
         // empty the array
@@ -209,4 +211,6 @@ int main (int argc,char *argv[]) {
     
 return(0);
 
+
+return(0);
 }

@@ -22,7 +22,7 @@ double choose(double expr1, double expr2, double expr3, double expr4){
 
 //matrix multiplier -passed
 
-double **matrix_multiply(double **m1, double **m2, int m1_r, int m1_c, int m2_c){
+double **matrix_mult(double **m1, double **m2, int m1_r, int m1_c, int m2_c){
     double **output_matrix = malloc(sizeof(double*)*m1_r);
     for(int i = 0; i< m2_c; i++){
         output_matrix[i] = malloc(sizeof(double)*m2_c);

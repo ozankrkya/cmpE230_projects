@@ -93,7 +93,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             break;
         }
         if((strcmp(token, "+")==0 || strcmp(token, "-")== 0 || strcmp(token, "*")== 0)){
-           
+            printf("- %s\n",token);
 
             if(!isEmpty()){
                temp1 = pop();

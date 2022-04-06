@@ -5,9 +5,9 @@ scalar i
 scalar n
 vector x[2]
 vector y[2]
-matrix A[2,3]
-matrix B[3,2]
-matrix C[2,2]
+matrix A[3,2]
+matrix B[2,2]
+matrix C[3,2]
 # statements
 n = 10
 x = { 1 1 }
@@ -18,6 +18,7 @@ for(i in 1:n:1) {
  B = A*B
  y = B*x
  print(y[1])
-}
-A*B+C
 
+ 4*4
+
+       

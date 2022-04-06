@@ -24,7 +24,6 @@ int isVectorId(char * token);
 
 
    int     numtokens ; 
-   char    str[N]   ; 
    
   
 

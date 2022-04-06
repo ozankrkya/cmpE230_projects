@@ -18,13 +18,13 @@ int main (int argc,char *argv[]) {
     char *splittedLines[256];
     for (int i = 0; i < 256; i++) splittedLines[i] = calloc(256, sizeof(char*));
     char *varNames[512];
-    for (int i = 0; i < 512; i++) varNames[i] = calloc(512, sizeof(char));
+    for (int i = 0; i < 512; i++) varNames[i] = calloc(256, sizeof(char));
     char *varTypes[512];
-    for (int i = 0; i < 512; i++) varTypes[i] = calloc(512, sizeof(char));
+    for (int i = 0; i < 512; i++) varTypes[i] = calloc(256, sizeof(char));
     char *row_dimensions[512];
-    for (int i = 0; i < 512; i++) row_dimensions[i] = calloc(512, sizeof(char*));
+    for (int i = 0; i < 512; i++) row_dimensions[i] = calloc(256, sizeof(char*));
     char *col_dimensions[512];
-     for (int i = 0; i < 512; i++) col_dimensions[i] = calloc(512, sizeof(char*));
+     for (int i = 0; i < 512; i++) col_dimensions[i] = calloc(256, sizeof(char*));
     int varNumber = 0;
     /* Open file for reading Filename is given on the command line */
 

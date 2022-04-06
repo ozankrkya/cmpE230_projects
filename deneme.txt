@@ -19,5 +19,5 @@ for(i in 1:n:1) {
  y = B*x
  print(y[1])
 }
-A*B+C
+4-5*7+2
 

@@ -100,7 +100,7 @@ int factor(char *str , char* tokens[], char * varNames[])
    str3[0] = '\0' ;
    str4[0] = '\0' ;
 
-    printf("%s\n",tokens[cur]) ; 
+    //printf("%s\n",tokens[cur]) ; 
     if ( isInteger(tokens[cur])  ) {
        strcat(str,tokens[cur]) ; 
        strcat(str," ") ; 
@@ -139,12 +139,9 @@ int factor(char *str , char* tokens[], char * varNames[])
             }
             
          }else{
-            strcat(str,"@") ; 
-            strcat(str," ") ; 
-            strcat(str,"1") ; 
-            if ( strcmp(tokens[cur],"]") != 0 ) { 
+            if (strcmp(tokens[cur],"]") != 0 ) { 
                printf("%s", tokens[cur]);
-               printf("Error: expecting paranthesis\n") ; 
+               printf("Error: expecting paranthesis\n"); 
                return(0) ;
             }
          }

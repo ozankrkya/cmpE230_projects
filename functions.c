@@ -74,7 +74,35 @@ int isInteger(char *token)
     return(check) ; 
 }    
 
+int isValidName(char * name){
+    int check = 1 ;
+    char *q ; 
 
+    for(q = name ; *q != '\0' ; q++) {
+        check = check && isalnum(*q) ;
+    }
+    char *function_names[20] = {"sqrt","tr","choose","for" };
+    for(int i = 0; i<4; i++){
+        if (strcmp(name,function_names[i] )==0)
+        {
+            check = 0;
+            break;
+        }
+    }
+
+    return(check) ; 
+
+}
+
+
+int isVector(char* name , char* vectorArr[]){
+    for(int i = 0; i < 256; i++){
+        if(strcmp(name, vectorArr[i])==0) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 
 

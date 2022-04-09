@@ -19,6 +19,24 @@ double choose(double expr1, double expr2, double expr3, double expr4){
         return expr4;
     }
 }
+// scalar matrix multiplyer
+
+double ** matrix_scalar(double **m1,int num, int m1_r, int m1_c){
+        double **output_matrix = malloc(sizeof(double*)*m1_r);
+        for(int i = 0; i< m1_r; i++){
+            output_matrix[i] = malloc(sizeof(double)*m1_c);
+        }
+        double sop = 0 ;
+        for (int i = 0; i<m1_r; i++){
+            for (int j = 0; j<m1_c ; j++){
+                sop += m1[i][j] * num;
+                output_matrix[i][j] = sop;
+                sop = 0;
+            }
+        }
+        return output_matrix;
+
+    }
 
 //matrix multiplier -passed
 

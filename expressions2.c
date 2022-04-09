@@ -100,7 +100,7 @@ int factor(char *str , char* tokens[], char * varNames[])
    str3[0] = '\0' ;
    str4[0] = '\0' ;
 
-    printf("%s\n",tokens[cur]) ; 
+    //printf("%s\n",tokens[cur]) ; 
     if ( isInteger(tokens[cur])  ) {
        strcat(str,tokens[cur]) ; 
        strcat(str," ") ; 

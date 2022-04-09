@@ -76,7 +76,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
       char * temp1;
       char * temp2;
       char * temp3;
-      printf("%s \n", token);
+      //printf("%s \n", token);
         
       if(strcmp(token, "exit") == 0){
          temp1 =pop();
@@ -114,7 +114,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             temp2type = varTypes[temp2Id];
          }
 
-         printf("%s", temp1type);
+         //printf("%s", temp1type);
          if(strcmp(token, "+")==0 ){
             if(strcmp(temp1type, "matrix") == 0 ){
                if(strcmp(temp2type, "matrix") == 0){
@@ -226,10 +226,38 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                      error(lineId);
                   }
                }else{
+                  strcat(temp, "matrix_scalar( ");
+                  strcat(temp, temp2);
+                  strcat(temp, " , ");
+                  strcat(temp, temp1);
+                  strcat(temp, " , ");
+                  strcat(temp, rowdm[temp1Id]);
+                  strcat(temp, " , ");
+                  strcat(temp, coldm[temp1Id]);
+                  strcat(temp, ")");
+                  varNames[varNum] = temp;
+                  varTypes[varNum] = "matrix";
+                  coldm[varNum] = coldm[temp1Id];
+                  rowdm[varNum] = rowdm[temp1Id];
+                  varNum ++;
                      //matrix Scalar yazılacak
                }
             }else if(strcmp(temp2type, "matrix") == 0){
                   // matrix scalar yazılacak
+                  strcat(temp, "matrix_scalar( ");
+                  strcat(temp, temp1);
+                  strcat(temp, " , ");
+                  strcat(temp, temp2);
+                  strcat(temp, " , ");
+                  strcat(temp, rowdm[temp2Id]);
+                  strcat(temp, " , ");
+                  strcat(temp, coldm[temp2Id]);
+                  strcat(temp, ")");
+                  varNames[varNum] = temp;
+                  varTypes[varNum] = "matrix";
+                  coldm[varNum] = coldm[temp2Id];
+                  rowdm[varNum] = rowdm[temp2Id];
+                  varNum ++;
             }else{
                // scalar çarpım
                strcat(temp, "( ");
@@ -250,7 +278,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                      
 
                   
-         printf("%s", temp);     
+         //printf("%s", temp);     
          push(temp);
                   
             //printf("0 %s \n", stack[0]);

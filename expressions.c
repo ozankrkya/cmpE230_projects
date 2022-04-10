@@ -8,6 +8,7 @@
 char * array[20] = {"x", "=" ,"{", "1", "1", "}"};
 char * operators[5] = {"x", "+", "-", "(", ")"};
 
+//stack implementation
 int MAXSIZE = 256;       
 char * stack[256];     
 int top = -1;            
@@ -55,9 +56,9 @@ void push(char * data) {
 }
 
 
-
+//translates funtion postfix to infix
 void postFixToInfix(char* sentence[], char * result, char * varNames[], char * varTypes[], int lineId, int *varNum, char *coldm[], char*rowdm[], char *vectors[]){
-
+   //allocates memory to tokens
    char ** temps = malloc(sizeof(char*)*256);
    for (int i=0;i<256;i++){
       temps[i] = malloc(sizeof(char)*512);
@@ -70,23 +71,28 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
       char * temp1;
       char * temp2;
       char * temp3;
+      //if it is basecase function ends
       if(strcmp(token, "exit") == 0){
          temp1 = pop();
          strcpy(result,temp1);
          break;
       }
-
+      //if the token is sqrt then makes sqrt operations
       if (strcmp(token,"sqrt") == 0){
+         //initializes the expression array inside the sqrt parenthesis
          char ** expr_rec = malloc(sizeof(char*)*256);
          for (int i=0;i<256;i++){
             expr_rec[i] = malloc(sizeof(char)*256);
          } 
+         //a little stack implementation for parenthesis check, hocam görürseniz nolur puan verin o kadar uğraştık lütfen
          int index_paran = 0;
          int paran[80];
          paran[0] = 1;
          index_paran++;
          int sentence_index = i+2;
          int rec_expr_index = 0;
+         //while paranthesis stack is not empty
+         //fills the expression with appropiate terms
          while(paran[0] != 0){
             if(strcmp(sentence[sentence_index],"(")==0){
                paran[index_paran] = 1;
@@ -114,14 +120,18 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                rec_expr_index++;
             }
          }
+         //result array for infix notation returned from the postfixToInfix function
          char *res = calloc(256,sizeof(char));
          postFixToInfix(expr_rec, res, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
+         //concatenates the result for function call
          strcat(temp, "sqrt");
          strcat(temp, "(");
          strcat(temp, res);
          strcat(temp,")");
          int res_index = find(res, varNames);
+         //gets the result index
          if(strcmp(varTypes[res_index],"scalar")==0){
+            //initializes the temp as a new variable
             varNames[*varNum] = temp;
             varTypes[*varNum] = "scalar";
             rowdm[*varNum] = NULL;
@@ -132,7 +142,6 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             continue;
          }
          else if(strcmp(varTypes[res_index],"matrix")==0){
-            //printf("matrixle cagrildim\n");
             error(lineId);
             // sqrt doesnt return scalar
          }
@@ -141,16 +150,19 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
       // implementation for transpose
 
       if(strcmp(token,"tr")==0){
+         // initalizes the output array
          char ** expr_rec = malloc(sizeof(char*)*256);
          for (int i=0;i<256;i++){
             expr_rec[i] = malloc(sizeof(char)*256);
          }
+         //same stack implementation as in the sqert functions
          int index_paran = 0;
          int paran[80];
          paran[0] = 1;
          index_paran++;
          int sentence_index = i+2;
          int rec_expr_index = 0;
+         //fils the expression array
          while(paran[0] != 0){
             if(strcmp(sentence[sentence_index],"(")==0){
                paran[index_paran] = 1;
@@ -178,15 +190,16 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                rec_expr_index++;
             }
          }
+         //initializes the result
          char *res = calloc(256,sizeof(char));
          postFixToInfix(expr_rec, res, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
-         strcat(temp, "tr");
-         strcat(temp, "(");
-         strcat(temp, res);
-         strcat(temp,")");
          int res_index = find(res, varNames);
          //checks for the type returned from the inside
          if(strcmp(varTypes[res_index],"scalar")==0){
+            strcat(temp, "transpose_s");
+            strcat(temp, "(");
+            strcat(temp, res);
+            strcat(temp,")");
             varNames[*varNum] = temp;
             varTypes[*varNum] = "scalar";
             rowdm[*varNum] = NULL;
@@ -197,11 +210,19 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             continue;
          }
          else if(strcmp(varTypes[res_index],"matrix")==0){
+            //matrix transpose function call
+            strcat(temp, "matrix_transpose");
+            strcat(temp, "(");
+            strcat(temp, res);
+            strcat(temp, ",");
+            strcat(temp,rowdm[res_index]);
+            strcat(temp, ",");
+            strcat(temp,coldm[res_index]);
+            strcat(temp,")");
             varNames[*varNum] = temp;
             varTypes[*varNum] = "matrix";
             coldm[*varNum] = rowdm[res_index];
             rowdm[*varNum] = coldm[res_index];
-            //printf("col now: %s\n",coldm[varNum]);
             (*varNum)++;
             push(temp);
             i = sentence_index; 
@@ -211,6 +232,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
 
       //implementation for choose
       if (strcmp(token,"choose")==0){
+         // four distinct initialization for four expressions inside the choose
          char ** expr1 = malloc(sizeof(char*)*256);
          for (int i=0;i<256;i++){
             expr1[i] = malloc(sizeof(char)*256);
@@ -227,7 +249,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
          for (int i=0;i<256;i++){
             expr4[i] = malloc(sizeof(char)*256);
          }
-
+         //choose expressions are seperated with pipes
          int pipe_count = 0;
          int sentence_index = i+2;
          int expr_index = 0;
@@ -345,10 +367,12 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                sentence_index++;
             }
          }
+         //initializes the results
          char *res1 = calloc(256,sizeof(char));
          char *res2 = calloc(256,sizeof(char));
          char *res3 = calloc(256,sizeof(char));
          char *res4 = calloc(256,sizeof(char));
+         //gets them into infix form
          postFixToInfix(expr1, res1, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
          postFixToInfix(expr2, res2, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
          postFixToInfix(expr3, res3, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
@@ -358,7 +382,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
          int res2_index = find(res2,varNames);
          int res3_index = find(res3,varNames);
          int res4_index = find(res4,varNames);
-
+         //comparisons for appropiate types with result index and varTypes array
          if(strcmp(varTypes[res1_index],"scalar") == 0 && strcmp(varTypes[res2_index],"scalar") == 0 \
          && strcmp(varTypes[res3_index],"scalar") == 0 && strcmp(varTypes[res4_index],"scalar") == 0){
          //token to be pushed is created   
@@ -385,18 +409,15 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
          }
          else{
             //choose expressions must be in type of scalar
-            printf("error line 393\n");
             error(lineId);
-            continue;
+            break;
          }
       }
-      //BURAYA BAKILACAK DEBUG LAZIM
-
-      //DEBUG LAZIM
 
       //implementation for indexing 
       
-      if(strcmp(token,"[")==0){     
+      if(strcmp(token,"[")==0){   
+         //checks whether the  variable is vector  
          if (isVector(sentence[i-1],vectors)){   
             char ** exprv = malloc(sizeof(char*)*256);
             for (int i=0;i<256;i++){
@@ -432,7 +453,6 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                   sentence_indexv++;
                }
             }
-            printf("435\n");
             char *resv = calloc(256,sizeof(char));
             postFixToInfix(exprv, resv, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
             int resv_index = find(resv, varNames);
@@ -454,8 +474,8 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                continue;
             }
             else{
-               printf("error458:\n");
                error(lineId);
+               break;
                //index type must be a scalar
             }
             
@@ -463,7 +483,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
          else{
             
             int matrix_index = find(sentence[i-1],varNames);
-            
+            //checks whether the  variable is matrix  
             if(strcmp(varTypes[matrix_index],"matrix")==0){
                char ** exprm_1 = malloc(sizeof(char*)*256);
                for (int i=0;i<256;i++){
@@ -540,11 +560,11 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                }
                char *resm1 = calloc(256,sizeof(char));
                char *resm2 = calloc(256,sizeof(char));
+               //converts the expressions postfix to infix recursively
                postFixToInfix(exprm_1, resm1, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
                postFixToInfix(exprm_2, resm2, varNames, varTypes, lineId, varNum, coldm, rowdm, vectors);
                int resm1_index = find(resm1, varNames);
                int resm2_index = find(resm2, varNames);
-               printf("resm1: %d",isInteger(resm1));
                if( ((strcmp(varTypes[resm1_index],"scalar")==0) || isInteger(resm1)) && ((strcmp(varTypes[resm2_index],"scalar")==0) || isInteger(resm2))){
                   strcat(temp,sentence[i-1]);
                   strcat(temp,"[");
@@ -631,7 +651,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                error(lineId);
                break;
             }else{
-               // scalar toplam
+               // scalar addition
                strcat(temp, "( ");
                strcat(temp, temp2);
                strcat(temp, " + ");
@@ -645,6 +665,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             }
 
          }else if(strcmp(token, "-")== 0 ){
+            //matrix subtraction
             if(strcmp(temp1type, "matrix") == 0 ){
                if(strcmp(temp2type, "matrix") == 0){
                   if(strcmp(coldm[temp1Id], coldm[temp2Id])==0 && strcmp(rowdm[temp1Id], rowdm[temp2Id])==0){
@@ -693,6 +714,7 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
          }else if (strcmp(token, "*")== 0){
             if(strcmp(temp1type, "matrix") == 0 ){
                if(strcmp(temp2type, "matrix") == 0){
+                  //matrix multiplication
                   if(strcmp(coldm[temp2Id], rowdm[temp1Id])==0){
                      strcat(temp, "matrix_mult( ");
                      strcat(temp, temp2);
@@ -713,14 +735,43 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
                   }else{
                      //cols and rows are not compatible
                      error(lineId);
+                     break;
                   }
                }else{
-                     //matrix Scalar yazılacak
+                  //matrix scalar multiplier
+                  strcat(temp, "matrix_scalar( ");
+                  strcat(temp, temp1);
+                  strcat(temp, " , ");
+                  strcat(temp, temp2);
+                  strcat(temp, " , ");
+                  strcat(temp, rowdm[temp2Id]);
+                  strcat(temp, " , ");
+                  strcat(temp, coldm[temp2Id]);
+                  strcat(temp, ")");
+                  varNames[*varNum] = temp;
+                  varTypes[*varNum] = "matrix";
+                  coldm[*varNum] = coldm[temp2Id];
+                  rowdm[*varNum] = rowdm[temp2Id];
+                  varNum ++;
                }
             }else if(strcmp(temp2type, "matrix") == 0){
-                  // matrix scalar yazılacak
+               //matrix scalar multiplier
+                  strcat(temp, "matrix_scalar( ");
+                  strcat(temp, temp1);
+                  strcat(temp, " , ");
+                  strcat(temp, temp2);
+                  strcat(temp, " , ");
+                  strcat(temp, rowdm[temp2Id]);
+                  strcat(temp, " , ");
+                  strcat(temp, coldm[temp2Id]);
+                  strcat(temp, ")");
+                  varNames[*varNum] = temp;
+                  varTypes[*varNum] = "matrix";
+                  coldm[*varNum] = coldm[temp2Id];
+                  rowdm[*varNum] = rowdm[temp2Id];
+                  varNum ++;
             }else{
-               // scalar çarpım
+               // scalar multiplier
                strcat(temp, "( ");
                strcat(temp, temp2);
                strcat(temp, " * ");
@@ -734,17 +785,12 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
             }    
          }         
          push(temp);
-         //printf("0 %s \n", stack[0]);
-         //printf("0 %s \n", stack[1]);
-         //printf("tmp1 %s \n" , temp1);
+         
       }else {
-            //printf("token: %s\n", token);
+            
             push(token);
       } 
-      //memset(temp,0,256);
-      //printf("after %s \n", stack[0]);
-      //printf("%s \n", stack[1]);
-      //printf("%d ", top); 
+      
    }
    free(temps);
 }

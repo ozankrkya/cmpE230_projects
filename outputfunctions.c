@@ -1,7 +1,3 @@
-#include <stdio.h>
-
-//sqrt is already implemented in c standart library
-
 //transpose scalar
 double transpose_s(float s){
     return s;
@@ -20,13 +16,15 @@ double choose(double expr1, double expr2, double expr3, double expr4){
     }
 }
 
-//matrix multiplier -passed
+//matrix multiplier 
 
 double **matrix_mult(double **m1, double **m2, int m1_r, int m1_c, int m2_c){
+    //initializes the output array 
     double **output_matrix = malloc(sizeof(double*)*m1_r);
     for(int i = 0; i< m2_c; i++){
         output_matrix[i] = malloc(sizeof(double)*m2_c);
     }
+    //sum of products for output marix's entries
     double sop = 0 ;
     for (int i = 0; i<m1_r; i++){
         for (int j = 0; j<m2_c ; j++){
@@ -40,13 +38,15 @@ double **matrix_mult(double **m1, double **m2, int m1_r, int m1_c, int m2_c){
     return output_matrix;
 }
 
-//matrix adder -passed
+//matrix adder 
 
 double **matrix_add(double **m1, double **m2, int m1_r, int m1_c){
+    //initializes the output array
     double **output_matrix = malloc(sizeof(double*)*m1_r);
     for(int i = 0; i< m1_c; i++){
         output_matrix[i] = malloc(sizeof(double)*m1_c);
     }
+    // adds the entries with one to one correspondence
     for (int i = 0; i<m1_r ; i++){
         for (int j = 0 ; j< m1_c ; j++){
             output_matrix[i][j] = m1[i][j] + m2[i][j];
@@ -54,13 +54,14 @@ double **matrix_add(double **m1, double **m2, int m1_r, int m1_c){
     } 
     return output_matrix;
 }
-//matrix subtructor -passed
-
+//matrix subtructor 
 double **matrix_sub(double **m1, double **m2, int m1_r, int m1_c){
+    //initializes the output array
     double **output_matrix = malloc(sizeof(double*)*m1_r);
     for(int i = 0; i< m1_c; i++){
         output_matrix[i] = malloc(sizeof(double)*m1_c);
     }
+    // subtracts the entries with one to one correspondence
     for (int i = 0; i<m1_r ; i++){
         for (int j = 0 ; j< m1_c ; j++){
             output_matrix[i][j] = m1[i][j] - m2[i][j];
@@ -69,14 +70,16 @@ double **matrix_sub(double **m1, double **m2, int m1_r, int m1_c){
     return output_matrix;
 }
 
-// matrix transposer -passed
+// matrix transposer 
 
 double **matrix_transpose(double **matrix, int matrix_r, int matrix_c){
+    //initializes the output array
     double **output_matrix = malloc(sizeof(double*)*matrix_r);
     for(int i = 0; i< matrix_c; i++){
         output_matrix[i] = malloc(sizeof(double)*matrix_c);
     }
-    for(int i = 0; i< matrix_r; i++){
+    // defines the output matrix's [j][i] as input matrix's [i][j]
+    for(int i = 0; i< matrix_r; i++){ 
         for (int j = 0; j<matrix_c; j++){
             output_matrix[j][i] = matrix[i][j]; 
         }
@@ -92,40 +95,39 @@ void printsep(){
 }
 
 // matrix printer / i think there is no need for implementing a printer for scalars
-double epsilon = 1/(1048576);
-#include <math.h>
-matrix_printer(double **print_matrix, int row_num, int col_num){
-    for (int i=0 ; i++ ; i<row_num){
-        for (int j=0 ; j++ ; j<col_num){
+
+
+void matrix_printer(double **print_matrix, int row_num, int col_num){
+    //defines an epsilon for comparising if number is integer or float
+    double epsilon = 1/(1048576);
+    for (int i=0 ; i<row_num; i++){
+        for (int j=0 ; j<col_num ; j++){
             double value = print_matrix[i][j];
-            double floor_val = floor(value);
-            if (floor_val > value){
-                if ((floor_val - value) > epsilon){
-                    printf("%f\n",value);
-                }
-                else {
-                    printf("%d\n",(int) floor_val);
-                }
+            int floor_val = (int)(value);
+            if (value-floor_val>0){
+                printf("%f\n", value);
+            }else{
+                printf("%d\n", floor_val);
             }
-            else{
-                if((value-floor_val) > epsilon){
-                    printf("%f\n",value);
-                }
-                else{
-                    printf("%d\n", (int) floor_val);
-                }
-            }    
-        }   
+        }    
+        printf("\n" );
+    }   
+}
+// scalar matrix multiplyer
+
+double ** matrix_scalar(double **m1,int num, int m1_r, int m1_c){
+        double **output_matrix = malloc(sizeof(double*)*m1_r);
+        for(int i = 0; i< m1_r; i++){
+            output_matrix[i] = malloc(sizeof(double)*m1_c);
+        }
+        double sop = 0 ;
+        for (int i = 0; i<m1_r; i++){
+            for (int j = 0; j<m1_c ; j++){
+                sop += m1[i][j] * num;
+                output_matrix[i][j] = sop;
+                sop = 0;
+            }
+        }
+        return output_matrix;
+
     }
-}
-
-double **matrix_assigner(int row_number, int column_number){
-    double **output_matrix = calloc(row_number,sizeof(double*));
-    for(int i = 0; i< column_number; i++){
-        output_matrix[i] = calloc(column_number,sizeof(double));
-    } 
-    return output_matrix;
-}
-
-
-

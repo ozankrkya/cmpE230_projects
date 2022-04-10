@@ -5,9 +5,9 @@ scalar i
 scalar n
 vector x[2]
 vector y[2]
-matrix A[2,3]
-matrix B[3,2]
-matrix C[2,2]
+matrix A[3,2]
+matrix B[2,2]
+matrix C[3,2]
 # statements
 n = 10
 x = { 1 1 }
@@ -19,5 +19,7 @@ for(i , j in 3+5:8:22*3, 2:2:2) {
  y = B*x
  print(y[1])
 }
-choose(1,2,3,4)
+x[1]
 
+
+       

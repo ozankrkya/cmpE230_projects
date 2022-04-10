@@ -124,7 +124,7 @@ int factor(char *str , char* tokens[], char * varNames[])
          strcat(str," ") ; 
          
          if ( strcmp(tokens[cur],",") == 0 ) { 
-            strcat(str,tokens[cur]) ; 
+            strcat(str,"@") ; 
             strcat(str," ") ; 
             cur ++;
             if ( ! expr(str2, tokens, varNames) ) {
@@ -139,12 +139,9 @@ int factor(char *str , char* tokens[], char * varNames[])
             }
             
          }else{
-            strcat(str,",") ; 
-            strcat(str," ") ; 
-            strcat(str,"1") ; 
-            if ( strcmp(tokens[cur],"]") != 0 ) { 
+            if (strcmp(tokens[cur],"]") != 0 ) { 
                printf("%s", tokens[cur]);
-               printf("Error: expecting paranthesis\n") ; 
+               printf("Error: expecting paranthesis\n"); 
                return(0) ;
             }
          }
@@ -176,8 +173,8 @@ int factor(char *str , char* tokens[], char * varNames[])
        strcat(str," ") ; 
        cur ++;
        if ( strcmp(tokens[cur],"(") == 0 ) {
-         //strcat(str,tokens[cur]) ; 
-         //strcat(str," ") ; 
+         strcat(str,tokens[cur]) ; 
+         strcat(str," ") ; 
          cur++ ; 
          if ( ! expr(str1, tokens, varNames) ) {
             return(0) ;    
@@ -188,7 +185,7 @@ int factor(char *str , char* tokens[], char * varNames[])
             return(0) ;
          }
          strcat(str, str1);
-         //strcat(str,tokens[cur]) ; 
+         strcat(str,tokens[cur]) ; 
          strcat(str," ") ; 
          
          cur++ ; 
@@ -245,11 +242,11 @@ int factor(char *str , char* tokens[], char * varNames[])
             return(0) ;
          }
          strcat(str, str1);
-         strcat(str, ", ");
+         strcat(str, " | ");
          strcat(str, str2);
-         strcat(str, ", ");
+         strcat(str, " | ");
          strcat(str, str3);
-         strcat(str, ", ");
+         strcat(str, " | ");
          strcat(str, str4);
          strcat(str,tokens[cur]) ; 
          strcat(str," ") ; 

@@ -31,6 +31,7 @@ int main (int argc,char *argv[]) {
     char *vectorArr[256];
     for (int i = 0; i < 256; i++) vectorArr[i] = calloc(256, sizeof(char*));
     int varNumber = 0;
+    int vectorNum = 0;
     /* Open file for reading Filename is given on the command line */
 
     if (argc != 2) {
@@ -132,6 +133,8 @@ int main (int argc,char *argv[]) {
             }
 
         }else if(strcmp(splittedLines[0],"vector")==0){
+            memcpy(vectorArr[vectorNum],splittedLines[1],24);
+            vectorNum++;
             if(strcmp(splittedLines[2],"[")==0 && strcmp(splittedLines[4],"]")==0 && isInteger(splittedLines[3])){
                 memcpy(varTypes[varNumber], "matrix", 100);
                 if(isValidName(splittedLines[1])){
@@ -198,15 +201,11 @@ int main (int argc,char *argv[]) {
                     
                     if(strcmp(splittedLines[2],"{") == 0 && strcmp(splittedLines[3+(row_num_as_matrix*col_num_as_matrix)], "}") == 0){
                         int entry_number = row_num_as_matrix*col_num_as_matrix;
-                        double entries[entry_number];
                         for(int i=0;i<row_num_as_matrix;i++){
                             for(int j=0;j<col_num_as_matrix;j++){
                                 int entry_char_size = strlen(splittedLines[3+(i*col_num_as_matrix+j)]);
                                 char *entry_value_in_char = calloc(entry_char_size,sizeof(double));
                                 memcpy(entry_value_in_char,splittedLines[3+(i*col_num_as_matrix+j)],entry_char_size);
-                                double entry_value = atof(entry_value_in_char);
-                                entries[i*col_num_as_matrix+j] = entry_value;
-
                                 //print to c file
                                 char str_i[50];
                                 char str_j[50];
@@ -228,8 +227,6 @@ int main (int argc,char *argv[]) {
                         for (int i=0;i<entry_number;i++){
                         
                         }
-                        // at the end of above block, we have the double array (entries) to give as an input to matrix_assign function.
-                        // now print "varName[as_var_index] = matrix_assigner(entries, row_num_as_matrix, col_num_as_matrix);\n" to the output file
                     }else if(false){
                         //matrix can assigned by expression assign matrix here
 
@@ -381,6 +378,7 @@ int main (int argc,char *argv[]) {
             }
             
         //change matrix index
+        /*
         }else if(strcmp(splittedLines[1],"[") == 0){
             printf("%s \n", splittedLines[0]);
             char *expr1[256];
@@ -427,6 +425,7 @@ int main (int argc,char *argv[]) {
                     expr1[i-2] = splittedLines[i];
                 }
             }
+            */
 
             
             
@@ -458,10 +457,15 @@ int main (int argc,char *argv[]) {
             result3[0] = '\0';
             //printf("%d", tmpId);
             //printf("%s", result2[5]);
-            postFixToInfix(result2, result3, varNames,varTypes, lineId, varNumber, col_dimensions, row_dimensions);
-            printf("%s \n", result3);
-            printf("%s \n", resultArr[4]);
-            printf("%s \n", resultArr[15]);
+            int* pvarNum;
+            pvarNum = &varNumber;
+            
+            postFixToInfix(result2, result3, varNames,varTypes, lineId, pvarNum, col_dimensions, row_dimensions, vectorArr);
+            printf("result in main: %s",result3);
+            printf("varnum: %d\n",*pvarNum);
+            //printf("%s \n", result3);
+            //printf("%s \n", resultArr[4]);
+            //printf("%s \n", resultArr[15]);
             
         }
 

@@ -42,7 +42,7 @@ int find(char* name , char* varNames[]){
 
 //prints error line
 void error(int lineId){
-    printf("error in line %d", lineId);
+    printf("error in line %d\n", lineId);
 }
 
 // checks whether the input is number
@@ -62,9 +62,9 @@ bool isNumber(char* name){
     }
     return check;
 }
-int isInteger(char *token) 
+bool isInteger(char *token) 
 {
-    int check = true ;
+    bool check = true ;
     char *q ; 
 
     for(q = token ; *q != '\0' ; q++) {
@@ -98,10 +98,10 @@ int isValidName(char * name){
 int isVector(char* name , char* vectorArr[]){
     for(int i = 0; i < 256; i++){
         if(strcmp(name, vectorArr[i])==0) {
-            return i;
+            return 1;
         }
     }
-    return -1;
+    return 0;
 }
 
 

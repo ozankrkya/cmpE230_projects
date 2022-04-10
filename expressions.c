@@ -80,11 +80,6 @@ void postFixToInfix(char* sentence[], char * result, char * varNames[], char * v
         
       if(strcmp(token, "exit") == 0){
          temp1 =pop();
-         while(!isEmpty() && (strcmp(peek(),"sqrt")== 0)){
-            strcat(temp, " ( ");
-            temp2 = pop();
-            strcat(temp, temp2);
-         }
          strcat(temp, temp1);
          strcat(result, temp);
             //printf("%s", token);
